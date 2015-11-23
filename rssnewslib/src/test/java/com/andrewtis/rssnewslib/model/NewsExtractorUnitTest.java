@@ -1,7 +1,5 @@
 package com.andrewtis.rssnewslib.model;
 
-import com.andrewtis.rssnewslib.model.NewsExtractor;
-import com.andrewtis.rssnewslib.model.NewsInfo;
 import com.andrewtis.rssnewslib.utils.TestNewsProducer;
 
 import junit.framework.Assert;

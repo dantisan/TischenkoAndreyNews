@@ -2,8 +2,6 @@ package com.andrewtis.rssnewslib.model;
 
 import com.andrewtis.rssnewslib.collectortesttool.CollectorCallbackTester;
 import com.andrewtis.rssnewslib.collectortesttool.StubNewsExtractor;
-import com.andrewtis.rssnewslib.model.NewsCollector;
-import com.andrewtis.rssnewslib.model.NewsInfo;
 
 import junit.framework.Assert;
 
@@ -37,10 +35,6 @@ public class NewsCollectorTester {
     SpecNewsCollector testedCollector;
     CollectorCallbackTester collectedCallbackTesters;
     HashMap<String, StubNewsExtractor> stubNewsExtractors;
-
-    public CountDownLatch getCountDownLatch() {
-        return countDownLatch;
-    }
 
     public void shutdownCollector() {
             testedCollector.terminateNewsRefreshing();

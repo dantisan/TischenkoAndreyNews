@@ -49,8 +49,7 @@ public class NewsCollectorCallbacksUnitTest {
         StubNewsExtractor extractor = StubNewsExtractor.getFailedExtractor();
         HashMap<String, StubNewsExtractor> urlExtractors = new HashMap<>();
         urlExtractors.put("url1", extractor);
-        Object[] mas = {collectorCallbackTester, urlExtractors};
-        return mas;
+        return new Object[]{collectorCallbackTester, urlExtractors};
     }
 
     private static Object[] argsTwoNewsExtractorWithSameDelay() {
@@ -62,8 +61,7 @@ public class NewsCollectorCallbacksUnitTest {
         urlExtractors.put("url1", extractor1);
         urlExtractors.put("url2", extractor2);
 
-        Object[] mas = {collectorCallbackTester, urlExtractors};
-        return mas;
+        return new Object[]{collectorCallbackTester, urlExtractors};
     }
 
     private static Object[] argsTwoNewsExtractorWithDifferentDelay() {
@@ -75,8 +73,7 @@ public class NewsCollectorCallbacksUnitTest {
         urlExtractors.put("url1", extractor1);
         urlExtractors.put("url2", extractor2);
 
-        Object[] mas = {collectorCallbackTester, urlExtractors};
-        return mas;
+        return new Object[]{collectorCallbackTester, urlExtractors};
     }
 
 }

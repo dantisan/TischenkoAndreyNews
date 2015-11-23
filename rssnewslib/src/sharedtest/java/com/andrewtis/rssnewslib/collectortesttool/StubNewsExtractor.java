@@ -56,20 +56,16 @@ public class StubNewsExtractor extends NewsExtractor {
         return newsList;
     }
 
-    public void addNewsInfo(NewsInfo newsInfo) {
-        newsList.add(newsInfo);
-    }
 
     public static StubNewsExtractor getStubNewsExtractor(int newsInExtractorCount, DateTime beginNewsTime, long extractorDelay) {
         List<NewsInfo> newsList = new ArrayList<>();
         for (Integer i = 0; i < newsInExtractorCount; i++) {
             beginNewsTime.plusSeconds(i);
             String dateStr = beginNewsTime.toString(NewsInfo.getRfc1123DateTimeFormatter());
-            NewsInfo newsInfo = new NewsInfo(i.toString(), i.toString(), i.toString(), dateStr.toString());
+            NewsInfo newsInfo = new NewsInfo(i.toString(), i.toString(), i.toString(), dateStr);
             newsList.add(newsInfo);
         }
-        StubNewsExtractor snExtractor = new StubNewsExtractor(newsList, extractorDelay);
-        return snExtractor;
+        return new StubNewsExtractor(newsList, extractorDelay);
     }
 
     public static StubNewsExtractor getFailedExtractor() {

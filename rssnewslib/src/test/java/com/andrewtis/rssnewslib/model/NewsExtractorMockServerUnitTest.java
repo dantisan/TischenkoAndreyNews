@@ -1,6 +1,5 @@
 package com.andrewtis.rssnewslib.model;
 
-import com.andrewtis.rssnewslib.model.NewsExtractor;
 import com.andrewtis.rssnewslib.utils.TestNewsProducer;
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
@@ -50,9 +49,6 @@ public class NewsExtractorMockServerUnitTest {
         extractor.httpClient.setReadTimeout(DELAY / 2, TimeUnit.MILLISECONDS);
         try {
             extractor.getUrlContent();
-        }
-        catch (Exception ex){
-            throw ex;
         }
         finally {
             mockWebServer.shutdown();

@@ -1,19 +1,17 @@
 package com.andrewtis.rssnewslib.utils;
 
 public interface NewsGetter {
-    public String getNewsXml();
+    String getNewsXml();
 
-    public String getNewsItem();
+    String getNewsItem();
 
-    public String getCorruptedItem();
+    String getCorruptedItem();
 
-    public String getNewsXmlWithIncorrectTags();
+    String getNewsXmlWithIncorrectTags();
 
-    public String getNewsWithIncorrectItemBody();
+    String getNewsWithIncorrectItemBody();
 
-    public String getHalfOfNewsXml();
+    int getNewsCount();
 
-    public int getNewsCount();
-
-    public int getNewsItemsWithRongBodyCount();
+    int getNewsItemsWithRongBodyCount();
 }

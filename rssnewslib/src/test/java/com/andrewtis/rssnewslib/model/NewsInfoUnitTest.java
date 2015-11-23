@@ -1,9 +1,6 @@
 package com.andrewtis.rssnewslib.model;
-import com.andrewtis.rssnewslib.model.NewsInfo;
 
 import junit.framework.Assert;
-
-import static com.andrewtis.rssnewslib.utils.TestNewsProducer.*;
 
 import org.junit.Test;
 import org.xml.sax.SAXException;
@@ -13,11 +10,11 @@ import java.text.ParseException;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import static com.andrewtis.rssnewslib.utils.TestNewsProducer.getNewsProducer;
+import static com.andrewtis.rssnewslib.utils.TestNewsProducer.newsFirm;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 
 public class NewsInfoUnitTest {
@@ -86,6 +83,10 @@ public class NewsInfoUnitTest {
     public void checkNewsInfoFromXml() throws ParserConfigurationException, SAXException, IOException, NewsInfo.NewsInfoXmlException {
         NewsInfo gazetaInfo = NewsInfo.getNewsFromXml(getNewsProducer(newsFirm.GAZETA).getNewsItem());
         NewsInfo lentaInfo = NewsInfo.getNewsFromXml(getNewsProducer(newsFirm.LENTA).getNewsItem());
+        Assert.assertNotNull(gazetaInfo);
+        Assert.assertNotNull(lentaInfo);
+
+
     }
 
     @Test(expected = SAXException.class)
@@ -93,6 +94,7 @@ public class NewsInfoUnitTest {
         String itemNewsString = getNewsProducer(newsFirm.GAZETA).getNewsItem();
         String corruptedItem = itemNewsString.replace("<item>", "").replace("</item>", "");
         NewsInfo corruptedInfo = NewsInfo.getNewsFromXml(corruptedItem);
+        Assert.fail("corrupted new passed");
     }
 
     @Test(expected = NewsInfo.NewsInfoXmlException.class)
@@ -100,12 +102,14 @@ public class NewsInfoUnitTest {
         String itemNewsString = getNewsProducer(newsFirm.GAZETA).getNewsItem();
         String corruptedItem = itemNewsString.replace("<item>", "<new>").replace("</item>", "</new>");
         NewsInfo corruptedInfo = NewsInfo.getNewsFromXml(corruptedItem);
+        Assert.fail("corrupted xml passed");
     }
 
     @Test(expected = NewsInfo.NewsInfoXmlException.class)
     public void checkNewsInfoFromXmlWithoutNeedItems() throws ParserConfigurationException, SAXException, NewsInfo.NewsInfoXmlException, IOException {
         String corruptedItem = getNewsProducer(newsFirm.GAZETA).getCorruptedItem();
         NewsInfo corruptedInfo = NewsInfo.getNewsFromXml(corruptedItem);
+        Assert.fail("corrupted new info without necessary fields passed");
     }
 
     @Test

@@ -1,8 +1,5 @@
 package com.andrewtis.rssnewslib.utils;
 
-/**
- * Created by andrew on 19.11.15.
- */
 public abstract class TestNewsProducer implements NewsGetter {
 
     protected String newsXml;
@@ -53,13 +50,7 @@ public abstract class TestNewsProducer implements NewsGetter {
         String endTag = "</item>";
         int indexOfEndFrstItem = newsXml.indexOf(endTag);
 
-        String corruptedNew = newsXml.substring(0, indexOfBeginFrstItem) + beginTag + " Incorrect body" + newsXml.substring(indexOfEndFrstItem);
-        return corruptedNew;
-    }
-
-    @Override
-    public String getHalfOfNewsXml() {
-        return newsXml.substring(0, newsXml.length() / 2);
+        return newsXml.substring(0, indexOfBeginFrstItem) + beginTag + " Incorrect body" + newsXml.substring(indexOfEndFrstItem);
     }
 
     @Override
