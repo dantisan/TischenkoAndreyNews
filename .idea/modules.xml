@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file:///data/Projects/MyOwn/TischenkoAndreyNews/TischenkoAndreyNews.iml" filepath="/data/Projects/MyOwn/TischenkoAndreyNews/TischenkoAndreyNews.iml" />
       <module fileurl="file:///data/Projects/MyOwn/TischenkoAndreyNews/app/app.iml" filepath="/data/Projects/MyOwn/TischenkoAndreyNews/app/app.iml" />
+      <module fileurl="file:///data/Projects/MyOwn/TischenkoAndreyNews/rssnewslib/rssnewslib.iml" filepath="/data/Projects/MyOwn/TischenkoAndreyNews/rssnewslib/rssnewslib.iml" />
     </modules>
   </component>
 </project>

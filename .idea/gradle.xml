@@ -10,6 +10,7 @@
           <set>
             <option value="/data/Projects/MyOwn/TischenkoAndreyNews" />
             <option value="/data/Projects/MyOwn/TischenkoAndreyNews/app" />
+            <option value="/data/Projects/MyOwn/TischenkoAndreyNews/rssnewslib" />
           </set>
         </option>
       </GradleProjectSettings>

@@ -1,0 +1,35 @@
+@startuml
+
+class NewsExtractor{
+    +List<NewsInfo> getNews()
+    #parseNews()
+}
+
+class NewsCollector {
+    + void refreshNews()
+    + List<NewsInfo> getNews()
+}
+
+class NewsInfo{
+    - String description;
+    - String imageUrl;
+    - String title;
+}
+
+class HttpClient
+interface Comparable
+
+NewsExtractor *-- HttpClient
+NewsExtractor - NewsInfo : produce >
+NewsCollector *-- NewsInfo
+NewsInfo <|-- Comparable
+NewsCollector -- NewsExtractor : use >
+
+
+note "Collect and \n sort news" as N1
+note "Get data \nfrom stream \nand make news" as N2
+
+NewsCollector . N1
+NewsExtractor .. N2
+
+@enduml
