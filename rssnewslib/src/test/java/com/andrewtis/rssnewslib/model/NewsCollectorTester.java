@@ -97,6 +97,7 @@ public class NewsCollectorTester {
     }
 
     private void checkNews() {
+        int expectedNewsCount = 0;
         for (String newsUrl : stubNewsExtractors.keySet()) {
 
             List<NewsInfo> newsInfoForUrl = testedCollector.getNewsInfoForUrl(newsUrl);
@@ -110,6 +111,8 @@ public class NewsCollectorTester {
             Collections.sort(res);
             Assert.assertEquals(res, newsInfoForUrl);
             Assert.assertTrue(testedCollector.getAllNewsInfo().containsAll(res));
+            expectedNewsCount+=res.size();
         }
+        Assert.assertEquals(expectedNewsCount,testedCollector.getNewsCount());
     }
 }

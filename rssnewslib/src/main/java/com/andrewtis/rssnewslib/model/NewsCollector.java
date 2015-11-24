@@ -18,6 +18,14 @@ public class NewsCollector {
 
     private ExecutorService executorService = Executors.newCachedThreadPool();
 
+    public int getNewsCount(){
+        int count = 0;
+        for (List<NewsInfo> news : newsCollection.values()) {
+            count+=news.size();
+        }
+        return count;
+    }
+
     public NewsCollector(NewsRefreshedCallback newsRefreshedCallback) {
         this.newsRefreshedCallback = newsRefreshedCallback;
     }

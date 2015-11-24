@@ -14,4 +14,10 @@ public class NewsCollectorUnitTest {
         Assert.assertEquals(testingUrl, extractor.rssNewsUrl);
 
     }
+
+    @Test
+    public void testGetCount(){
+
+    }
+
 }
