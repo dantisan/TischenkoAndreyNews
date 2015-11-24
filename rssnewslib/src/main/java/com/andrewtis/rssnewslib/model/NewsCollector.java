@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -14,9 +15,22 @@ public class NewsCollector {
 
     private volatile int newsRefreshing = 0;
 
+    public void setNewsRefreshedCallback(NewsRefreshedCallback newsRefreshedCallback) {
+        this.newsRefreshedCallback = newsRefreshedCallback;
+    }
+
     private NewsRefreshedCallback newsRefreshedCallback = null;
 
     private ExecutorService executorService = Executors.newCachedThreadPool();
+
+    public NewsCollector(NewsRefreshedCallback newsRefreshedCallback) {
+        this.newsRefreshedCallback = newsRefreshedCallback;
+    }
+
+    public NewsCollector(NewsRefreshedCallback newsRefreshedCallback, Iterable<String> newsUrls) {
+        this.newsRefreshedCallback = newsRefreshedCallback;
+
+    }
 
     public int getNewsCount(){
         int count = 0;
@@ -26,9 +40,6 @@ public class NewsCollector {
         return count;
     }
 
-    public NewsCollector(NewsRefreshedCallback newsRefreshedCallback) {
-        this.newsRefreshedCallback = newsRefreshedCallback;
-    }
 
     public List<NewsInfo> getNewsInfoForUrl(String url){
 
@@ -52,6 +63,24 @@ public class NewsCollector {
         return res;
     }
 
+    //Возможно некорректное поведение при возврате колбэка для удаленной новости
+    public void removeCacheUrl(String url){
+        newsCollection.remove(url);
+    }
+
+    public void refreshCachedNews(){
+        refreshNewsForUrl(newsCollection.keySet());
+    }
+
+    public void refreshNewsForUrl(Iterable<String> urlList){
+        for (String url : urlList) {
+            refreshNewsForUrl(url);
+        }
+    }
+
+    public Set<String> getCachedUrls(){
+        return newsCollection.keySet();
+    }
 
     public void refreshNewsForUrl(final String newsUrl)  {
         executorService.execute(new Runnable() {
@@ -86,6 +115,9 @@ public class NewsCollector {
                 newsRefreshedCallback.newRefreshedForUrl(newsUrl);
             }
         } catch (Exception ex) {
+            if(newsCollection.get(newsUrl)==null)
+                newsCollection.put(newsUrl, new ArrayList<NewsInfo>());
+
             if (callbackExists)
                 newsRefreshedCallback.errorOnRefreshing(ex, newsUrl);
             //newsCollection.remove(newsUrl);

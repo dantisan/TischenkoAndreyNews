@@ -76,9 +76,8 @@ public class NewsCollectorTester {
     }
 
     private void test(long timeout, int expextedMissedCallbacks) throws InterruptedException {
-        for (String url : stubNewsExtractors.keySet()) {
-            testedCollector.refreshNewsForUrl(url);
-        }
+
+        testedCollector.refreshNewsForUrl(stubNewsExtractors.keySet());
 
         int downCounts = expextedMissedCallbacks;
         while (downCounts--!=0)

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">RssNewsLib</string>
+    <string name="err_url_message">Не удалось получить новости для </string>
 </resources>

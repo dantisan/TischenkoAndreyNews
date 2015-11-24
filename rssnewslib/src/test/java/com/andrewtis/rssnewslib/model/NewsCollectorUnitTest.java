@@ -15,9 +15,4 @@ public class NewsCollectorUnitTest {
 
     }
 
-    @Test
-    public void testGetCount(){
-
-    }
-
 }
