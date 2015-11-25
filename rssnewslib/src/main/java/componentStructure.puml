@@ -1,0 +1,13 @@
+@startuml
+
+class NewsCollector
+class RssNewsRecycleViewAdapter
+class RssNewsRecycleView
+class RssNewsFragment
+
+NewsCollector --* RssNewsRecycleViewAdapter
+RssNewsFragment *- RssNewsRecycleViewAdapter
+RssNewsFragment *-- RssNewsRecycleView
+RssNewsRecycleView -- RssNewsRecycleViewAdapter
+
+@enduml
