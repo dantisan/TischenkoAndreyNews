@@ -66,9 +66,7 @@ public class NewsCollectorTester {
     }
 
     public void test(long timeout) throws InterruptedException {
-        test(timeout,0);
-        Assert.assertTrue(collectedCallbackTesters.getRealAllRefreshedCount() > 0);
-
+        test(timeout, 0);
     }
 
     public void testWithShutdown(long timeout, int expextedMissedCallbacks) throws InterruptedException {
@@ -102,7 +100,7 @@ public class NewsCollectorTester {
             List<NewsInfo> newsInfoForUrl = testedCollector.getNewsInfoForUrl(newsUrl);
             StubNewsExtractor extractor = stubNewsExtractors.get(newsUrl);
             if (extractor.isShouldFailNews()) {
-                Assert.assertNull(newsInfoForUrl);
+                Assert.assertTrue(newsInfoForUrl.isEmpty());
                 continue;
             }
             List<NewsInfo> res = new ArrayList<>();

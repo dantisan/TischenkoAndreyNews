@@ -11,9 +11,8 @@ import java.util.concurrent.Executors;
 
 
 public class NewsCollector {
-    private Map<String, List<NewsInfo>> newsCollection = new ConcurrentHashMap<>();
-
-    private volatile int newsRefreshing = 0;
+    protected Map<String, List<NewsInfo>> newsCollection = new ConcurrentHashMap<>();
+    private List<NewsInfo> sortedNews = Collections.synchronizedList(new ArrayList<NewsInfo>());
 
     public void setNewsRefreshedCallback(NewsRefreshedCallback newsRefreshedCallback) {
         this.newsRefreshedCallback = newsRefreshedCallback;
@@ -40,7 +39,6 @@ public class NewsCollector {
         return count;
     }
 
-
     public List<NewsInfo> getNewsInfoForUrl(String url){
 
         List<NewsInfo> newsInfos = newsCollection.get(url);
@@ -53,19 +51,36 @@ public class NewsCollector {
         return res;
     }
 
-    public List<NewsInfo> getAllNewsInfo(){
-        List<NewsInfo> res = new ArrayList<>();
+    private void addUrlNews(List<NewsInfo> news){
+        sortedNews.addAll(news);
+        Collections.sort(sortedNews);
+    }
+
+    private void refreshSortedNewsList(){
+        sortedNews.clear();
         for (List<NewsInfo> curList : newsCollection.values()) {
             if(curList!=null)
-                res.addAll(curList);
+                sortedNews.addAll(curList);
         }
-        Collections.sort(res);
+        Collections.sort(sortedNews);
+    }
+
+    public List<NewsInfo> getAllNewsInfo(){
+        List<NewsInfo> res = new ArrayList<>();
+        res.addAll(sortedNews);
         return res;
     }
 
     //Возможно некорректное поведение при возврате колбэка для удаленной новости
     public void removeCacheUrl(String url){
-        newsCollection.remove(url);
+        List<NewsInfo> removedNews = newsCollection.remove(url);
+        sortedNews.removeAll(removedNews);
+    }
+
+    public void addCacheUrl(String url){
+        if(newsCollection.get(url)==null){
+            newsCollection.put(url, new ArrayList<NewsInfo>());
+        }
     }
 
     public void refreshCachedNews(){
@@ -95,7 +110,7 @@ public class NewsCollector {
         executorService.shutdown();
     }
 
-    NewsExtractor getNewsExtractor(String newsUrl){
+    protected NewsExtractor getNewsExtractor(String newsUrl){
         return new NewsExtractor(newsUrl);
     }
 
@@ -105,13 +120,13 @@ public class NewsCollector {
             newsRefreshedCallback.beforeNewStartRefreshing(newsUrl);
 
         NewsExtractor newsExtractor = getNewsExtractor(newsUrl);
-        List<NewsInfo> info = null;
+        List<NewsInfo> newsList = null;
 
-        newsRefreshing++;
         try {
-            info = newsExtractor.getNews();
-            newsCollection.put(newsUrl, info);
+            newsList = newsExtractor.getNews();
+            newsCollection.put(newsUrl, newsList);
             if(callbackExists) {
+                addUrlNews(newsList);
                 newsRefreshedCallback.newRefreshedForUrl(newsUrl);
             }
         } catch (Exception ex) {
@@ -121,20 +136,12 @@ public class NewsCollector {
             if (callbackExists)
                 newsRefreshedCallback.errorOnRefreshing(ex, newsUrl);
             //newsCollection.remove(newsUrl);
-        } finally {
-            newsRefreshing--;
-            if (newsRefreshing == 0 && callbackExists) {
-                newsRefreshedCallback.allNewsInPullRefreshed();
-            }
         }
     }
 
     public interface NewsRefreshedCallback {
         public void beforeNewStartRefreshing(String url);
         public void newRefreshedForUrl(String url);
-
-        public void allNewsInPullRefreshed();
-
         public void errorOnRefreshing(Exception ex, String refreshingUrl);
     }
 

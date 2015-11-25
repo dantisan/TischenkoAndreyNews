@@ -15,13 +15,6 @@ public class CollectorCallbackTester implements NewsCollector.NewsRefreshedCallb
     private volatile int realRefreshedForUrlCount = 0;
     private volatile int realErrorsCount = 0;
 
-    public int getRealAllRefreshedCount() {
-        return realAllRefreshedCount;
-    }
-
-    private volatile int realAllRefreshedCount = 0;
-
-
     public CollectorCallbackTester(int expectedBeforeRefreshingCount, int expectedRefreshedForUrlCount, int expectedErrorsCount) {
         this.expectedBeforeRefreshingCount = expectedBeforeRefreshingCount;
         this.expectedRefreshedForUrlCount = expectedRefreshedForUrlCount;
@@ -37,11 +30,6 @@ public class CollectorCallbackTester implements NewsCollector.NewsRefreshedCallb
     @Override
     public void newRefreshedForUrl(String url) {
         realRefreshedForUrlCount++;
-    }
-
-    @Override
-    public void allNewsInPullRefreshed() {
-        realAllRefreshedCount++;
     }
 
     @Override
