@@ -21,6 +21,8 @@ public class NewsCollectorStub extends NewsCollector {
             addCacheUrl(url);
 
         }
+        urlExtractors.put("url_" + stubUrlsCount, StubNewsExtractor.getFailedExtractor());
+        addCacheUrl("url_" + stubUrlsCount);
     }
 
     @Override

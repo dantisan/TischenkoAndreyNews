@@ -1,6 +1,7 @@
 package com.andrewtis.rssnewslib;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import com.andrewtis.rssnewslib.model.NewsInfo;
 import java.util.List;
 
 import javax.inject.Inject;
+
 public class NewsRecycleViewAdapter extends RecyclerView.Adapter<NewsRecycleViewAdapter.NewsInfoViewHolder> {
 
     NewsCollector newsCollector = null;
@@ -22,48 +24,70 @@ public class NewsRecycleViewAdapter extends RecyclerView.Adapter<NewsRecycleView
 
     //!!!временное решение
     NewsCollector.NewsRefreshedCallback externCallback = null;
+
     //TODO  Наблюдатель
-    private class onNewsRefreshedCallbacks implements NewsCollector.NewsRefreshedCallback{
+    private class onNewsRefreshedCallbacks implements NewsCollector.NewsRefreshedCallback {
+        Handler mainHandler;
+
+        public onNewsRefreshedCallbacks(Context context) {
+            mainHandler = new Handler(context.getMainLooper());
+        }
 
         @Override
         public void beforeNewStartRefreshing(String url) {
-            if(progressView!=null)
-                progressView.setVisibility(View.VISIBLE);
-            if(externCallback !=null)
+
+            changeProgressViewVisibility(View.VISIBLE);
+            if (externCallback != null)
                 externCallback.beforeNewStartRefreshing(url);
         }
 
         @Override
         public void newRefreshedForUrl(String url) {
-            if(externCallback !=null)
+
+            if (externCallback != null)
                 externCallback.newRefreshedForUrl(url);
-            if(progressView!=null && progressView.getVisibility()!=View.GONE)
-                progressView.setVisibility(View.GONE);
+                changeProgressViewVisibility(View.GONE);
 
             notifyDataSetChanged();
         }
 
         @Override
-        public void errorOnRefreshing(Exception ex, String refreshingUrl) {
-            String errMessage = context.getResources().getString(R.string.err_url_message)+" "+refreshingUrl;
-            Toast.makeText(context,errMessage,Toast.LENGTH_LONG).show();
-            externCallback.errorOnRefreshing(ex, refreshingUrl);
+        public void errorOnRefreshing(final Exception ex, final String refreshingUrl) {
+            changeProgressViewVisibility(View.GONE);
+            mainHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    String errMessage = context.getResources().getString(R.string.err_url_message) + " " + refreshingUrl;
+                    Toast.makeText(context, errMessage, Toast.LENGTH_LONG).show();
+                    externCallback.errorOnRefreshing(ex, refreshingUrl);
+                }
+            });
+        }
+
+        private void changeProgressViewVisibility(final int visibility) {
+            if(progressView != null)
+            mainHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    progressView.setVisibility(visibility);
+                }
+            });
         }
     }
 
-    public NewsRecycleViewAdapter(Context context, List<String> newsRssUrlList, View progressView){
+    public NewsRecycleViewAdapter(Context context, List<String> newsRssUrlList, View progressView) {
         this.context = context;
         this.progressView = progressView;
-        newsCollector = new NewsCollector(new onNewsRefreshedCallbacks(),newsRssUrlList);
+        newsCollector = new NewsCollector(new onNewsRefreshedCallbacks(context), newsRssUrlList);
     }
 
     @Inject
-    NewsRecycleViewAdapter(Context context, NewsCollector collector, View progressView, NewsCollector.NewsRefreshedCallback externCallback){
+    NewsRecycleViewAdapter(Context context, NewsCollector collector, View progressView, NewsCollector.NewsRefreshedCallback externCallback) {
         this.context = context;
         this.progressView = progressView;
         this.newsCollector = collector;
         this.externCallback = externCallback;
-        newsCollector.setNewsRefreshedCallback(new onNewsRefreshedCallbacks());
+        newsCollector.setNewsRefreshedCallback(new onNewsRefreshedCallbacks(context));
     }
 
     @Override
@@ -83,11 +107,11 @@ public class NewsRecycleViewAdapter extends RecyclerView.Adapter<NewsRecycleView
         return newsCollector.getAllNewsInfo().size();
     }
 
-    public void refreshNews(){
+    public void refreshNews() {
         newsCollector.refreshCachedNews();
     }
 
-    static class NewsInfoViewHolder extends RecyclerView.ViewHolder{
+    static class NewsInfoViewHolder extends RecyclerView.ViewHolder {
         private TextView tvDescription;
         private TextView tvTitle;
         //TODO Реализовать асинхронную подгрузку картинок
@@ -100,7 +124,7 @@ public class NewsRecycleViewAdapter extends RecyclerView.Adapter<NewsRecycleView
 
         }
 
-        public void setDescriptionInfo(NewsInfo info ){
+        public void setDescriptionInfo(NewsInfo info) {
             tvDescription.setText(info.getDescription());
             tvTitle.setText(info.getDescription());
             //loadImageAsync();
