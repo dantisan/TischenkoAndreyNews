@@ -28,7 +28,7 @@ public class NewsCollector {
 
     public NewsCollector(NewsRefreshedCallback newsRefreshedCallback, Iterable<String> newsUrls) {
         this.newsRefreshedCallback = newsRefreshedCallback;
-
+        addCacheUrl(newsUrls);
     }
 
     public int getNewsCount(){
@@ -56,15 +56,6 @@ public class NewsCollector {
         Collections.sort(sortedNews);
     }
 
-    private void refreshSortedNewsList(){
-        sortedNews.clear();
-        for (List<NewsInfo> curList : newsCollection.values()) {
-            if(curList!=null)
-                sortedNews.addAll(curList);
-        }
-        Collections.sort(sortedNews);
-    }
-
     public List<NewsInfo> getAllNewsInfo(){
         List<NewsInfo> res = new ArrayList<>();
         res.addAll(sortedNews);
@@ -75,6 +66,15 @@ public class NewsCollector {
     public void removeCacheUrl(String url){
         List<NewsInfo> removedNews = newsCollection.remove(url);
         sortedNews.removeAll(removedNews);
+    }
+
+    public void addCacheUrl(Iterable<String> urlCollection){
+        if(urlCollection == null)
+            return;
+
+        for (String url : urlCollection) {
+            addCacheUrl(url);
+        }
     }
 
     public void addCacheUrl(String url){

@@ -3,6 +3,7 @@ package com.andrewtis.rssnewslib;
 
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
+import android.view.View;
 
 import com.andrewtis.rssnewslib.model.NewsCollector;
 
@@ -41,7 +42,7 @@ public class NewsRecycleViewAdapterTest extends AndroidTestCase {
 
     @SmallTest
     public void testProgressViewsVisibility(){
-
+        Assert.assertTrue(testedAdapter.progressView.getVisibility()== View.GONE);
     }
 
     @SmallTest

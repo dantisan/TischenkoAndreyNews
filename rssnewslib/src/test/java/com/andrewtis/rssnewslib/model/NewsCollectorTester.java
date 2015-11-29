@@ -75,7 +75,11 @@ public class NewsCollectorTester {
 
     private void test(long timeout, int expextedMissedCallbacks) throws InterruptedException {
 
-        testedCollector.refreshNewsForUrl(stubNewsExtractors.keySet());
+        Iterable<String> urls = null;
+        testedCollector.addCacheUrl(urls);
+
+        testedCollector.addCacheUrl(stubNewsExtractors.keySet());
+        testedCollector.refreshCachedNews();
 
         int downCounts = expextedMissedCallbacks;
         while (downCounts--!=0)
