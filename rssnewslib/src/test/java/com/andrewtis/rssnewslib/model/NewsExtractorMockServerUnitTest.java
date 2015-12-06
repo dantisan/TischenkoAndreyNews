@@ -17,7 +17,7 @@ import static com.andrewtis.rssnewslib.utils.TestNewsProducer.getNewsProducer;
 public class NewsExtractorMockServerUnitTest {
 
     @Test
-    public void test_getUrlContent() throws IOException {
+    public void checkGetUrlContent() throws IOException {
         MockWebServer mockWebServer = new MockWebServer();
         mockWebServer.start();
 
@@ -39,7 +39,7 @@ public class NewsExtractorMockServerUnitTest {
     }
 
     @Test(expected = IOException.class)
-    public void test_getUrlContentFail() throws IOException {
+    public void checkGetUrlContentFail() throws IOException {
         MockWebServer mockWebServer = new MockWebServer();
         mockWebServer.start();
         final int DELAY=200;

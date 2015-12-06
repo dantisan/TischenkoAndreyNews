@@ -62,7 +62,7 @@ public class StubNewsExtractor extends NewsExtractor {
         for (Integer i = 0; i < newsInExtractorCount; i++) {
             beginNewsTime.plusSeconds(i);
             String dateStr = beginNewsTime.toString(NewsInfo.getRfc1123DateTimeFormatter());
-            NewsInfo newsInfo = new NewsInfo(i.toString(), i.toString(), i.toString(), dateStr);
+            NewsInfo newsInfo = new NewsInfo("title"+i, "description"+i,"picturl"+ i, dateStr);
             newsList.add(newsInfo);
         }
         return new StubNewsExtractor(newsList, extractorDelay);

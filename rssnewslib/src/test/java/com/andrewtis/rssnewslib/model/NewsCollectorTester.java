@@ -2,6 +2,8 @@ package com.andrewtis.rssnewslib.model;
 
 import com.andrewtis.rssnewslib.collectortesttool.CollectorCallbackTester;
 import com.andrewtis.rssnewslib.collectortesttool.StubNewsExtractor;
+import com.andrewtis.rssnewslib.model.NewsCollector;
+import com.andrewtis.rssnewslib.model.NewsInfo;
 
 import junit.framework.Assert;
 
@@ -39,19 +41,6 @@ public class NewsCollectorTester {
     public void shutdownCollector() {
             testedCollector.terminateNewsRefreshing();
     }
-
-    //Method may not work correct in single thread
-//    public void shutdownCollector(long shutdownDelay){
-//        if(shutdownDelay==0)
-//            testedCollector.terminateNewsRefreshing();
-//        else
-//            new Timer().schedule(new TimerTask() {
-//                @Override
-//                public void run() {
-//                    testedCollector.terminateNewsRefreshing();
-//                }
-//            }, shutdownDelay);
-//    }
 
     CountDownLatch countDownLatch;
 

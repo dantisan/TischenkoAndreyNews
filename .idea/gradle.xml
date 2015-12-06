@@ -13,6 +13,13 @@
             <option value="/data/Projects/MyOwn/TischenkoAndreyNews/rssnewslib" />
           </set>
         </option>
+        <option name="myModules">
+          <set>
+            <option value="/data/Projects/MyOwn/TischenkoAndreyNews" />
+            <option value="/data/Projects/MyOwn/TischenkoAndreyNews/app" />
+            <option value="/data/Projects/MyOwn/TischenkoAndreyNews/rssnewslib" />
+          </set>
+        </option>
       </GradleProjectSettings>
     </option>
   </component>

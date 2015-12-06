@@ -22,58 +22,6 @@ public class NewsRecycleViewAdapter extends RecyclerView.Adapter<NewsRecycleView
     private Context context;
     View progressView;
 
-    //!!!временное решение
-    NewsCollector.NewsRefreshedCallback externCallback = null;
-
-    //TODO  Наблюдатель
-    private class onNewsRefreshedCallbacks implements NewsCollector.NewsRefreshedCallback {
-        Handler mainHandler;
-
-        public onNewsRefreshedCallbacks(Context context) {
-            mainHandler = new Handler(context.getMainLooper());
-        }
-
-        @Override
-        public void beforeNewStartRefreshing(String url) {
-
-            changeProgressViewVisibility(View.VISIBLE);
-            if (externCallback != null)
-                externCallback.beforeNewStartRefreshing(url);
-        }
-
-        @Override
-        public void newRefreshedForUrl(String url) {
-
-            if (externCallback != null)
-                externCallback.newRefreshedForUrl(url);
-                changeProgressViewVisibility(View.GONE);
-
-            notifyDataSetChanged();
-        }
-
-        @Override
-        public void errorOnRefreshing(final Exception ex, final String refreshingUrl) {
-            changeProgressViewVisibility(View.GONE);
-            mainHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    String errMessage = context.getResources().getString(R.string.err_url_message) + " " + refreshingUrl;
-                    Toast.makeText(context, errMessage, Toast.LENGTH_LONG).show();
-                    externCallback.errorOnRefreshing(ex, refreshingUrl);
-                }
-            });
-        }
-
-        private void changeProgressViewVisibility(final int visibility) {
-            if(progressView != null)
-            mainHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    progressView.setVisibility(visibility);
-                }
-            });
-        }
-    }
 
     public NewsRecycleViewAdapter(Context context, List<String> newsRssUrlList, View progressView) {
         this.context = context;
@@ -82,12 +30,11 @@ public class NewsRecycleViewAdapter extends RecyclerView.Adapter<NewsRecycleView
     }
 
     @Inject
-    NewsRecycleViewAdapter(Context context, NewsCollector collector, View progressView, NewsCollector.NewsRefreshedCallback externCallback) {
+    NewsRecycleViewAdapter(Context context, NewsCollector collector, View progressView) {
         this.context = context;
         this.progressView = progressView;
         this.newsCollector = collector;
-        this.externCallback = externCallback;
-        newsCollector.setNewsRefreshedCallback(new onNewsRefreshedCallbacks(context));
+        collector.setNewsRefreshedCallback(new onNewsRefreshedCallbacks(context));
     }
 
     @Override
@@ -126,9 +73,52 @@ public class NewsRecycleViewAdapter extends RecyclerView.Adapter<NewsRecycleView
 
         public void setDescriptionInfo(NewsInfo info) {
             tvDescription.setText(info.getDescription());
-            tvTitle.setText(info.getDescription());
+            tvTitle.setText(info.getTitle());
             //loadImageAsync();
         }
 
     }
+
+    private class onNewsRefreshedCallbacks implements NewsCollector.NewsRefreshedCallback {
+        Handler mainHandler;
+
+        public onNewsRefreshedCallbacks(Context context) {
+            mainHandler = new Handler(context.getMainLooper());
+        }
+
+        @Override
+        public void beforeNewStartRefreshing(String url) {
+
+            changeProgressViewVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void newRefreshedForUrl(String url) {
+            changeProgressViewVisibility(View.GONE);
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public void errorOnRefreshing(final Exception ex, final String refreshingUrl) {
+            changeProgressViewVisibility(View.GONE);
+            mainHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    String errMessage = context.getResources().getString(R.string.err_url_message) + " " + refreshingUrl;
+                    Toast.makeText(context, errMessage, Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+
+        private void changeProgressViewVisibility(final int visibility) {
+            if(progressView != null)
+                mainHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressView.setVisibility(visibility);
+                    }
+                });
+        }
+    }
+
 }

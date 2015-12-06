@@ -12,7 +12,6 @@ public class NewsCollectorUnitTest {
         String testingUrl = "myUrl";
         NewsExtractor extractor = collector.getNewsExtractor(testingUrl);
         Assert.assertEquals(testingUrl, extractor.rssNewsUrl);
-
     }
 
 }

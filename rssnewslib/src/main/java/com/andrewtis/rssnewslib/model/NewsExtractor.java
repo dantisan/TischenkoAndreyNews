@@ -24,10 +24,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-/**
- * Created by andrew on 16.11.15.
- */
 public class NewsExtractor {
+
     @NonNull String  rssNewsUrl;
 
     OkHttpClient httpClient = new OkHttpClient();

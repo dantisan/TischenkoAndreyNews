@@ -18,12 +18,10 @@ import static org.mockito.Mockito.when;
 
 public class NewsExtractorUnitTest {
 
-
-
     TestNewsProducer gazetaNews = TestNewsProducer.getNewsProducer(TestNewsProducer.newsFirm.GAZETA);
     TestNewsProducer lentaNews = TestNewsProducer.getNewsProducer(TestNewsProducer.newsFirm.LENTA);
     @Test
-    public void test_newsInfoCreation() throws NewsInfo.NewsInfoXmlException, IOException, ParserConfigurationException, SAXException {
+    public void checkNewsInfoCreation() throws NewsInfo.NewsInfoXmlException, IOException, ParserConfigurationException, SAXException {
         NewsExtractor extractor = mock(NewsExtractor.class);
         when(extractor.getNews()).thenCallRealMethod();
         assertNewsCount(extractor, gazetaNews.getNewsXml(),gazetaNews.getNewsCount());
@@ -32,7 +30,7 @@ public class NewsExtractorUnitTest {
 
 
     @Test
-    public void test_newsInfoCreationWithCorrupted() throws NewsInfo.NewsInfoXmlException, IOException, ParserConfigurationException, SAXException {
+    public void checkNewsInfoCreationWithCorrupted() throws NewsInfo.NewsInfoXmlException, IOException, ParserConfigurationException, SAXException {
 
         NewsExtractor extractor = mock(NewsExtractor.class);
         when(extractor.getNews()).thenCallRealMethod();

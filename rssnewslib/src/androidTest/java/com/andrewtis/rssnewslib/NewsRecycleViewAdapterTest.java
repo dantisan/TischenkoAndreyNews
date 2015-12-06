@@ -1,39 +1,33 @@
 package com.andrewtis.rssnewslib;
 
 
-import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
-import com.andrewtis.rssnewslib.model.NewsCollector;
+import com.andrewtis.rssnewslib.model.NewsInfo;
 
 import junit.framework.Assert;
 
-import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
+import java.util.List;
 
-import dagger.ObjectGraph;
-
-public class NewsRecycleViewAdapterTest extends AndroidTestCase {
-
-    NewsRecycleViewAdapter testedAdapter ;
-    private final static int urlCount = 3;
-    private final static int newsInUrlCount = 10;
-
-    NewsCollector newsCollector = new NewsCollectorStub(null, urlCount,newsInUrlCount);
+public class NewsRecycleViewAdapterTest extends NewsRecViewAdapterProgressViewTest {
 
     @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        RecycleViewAdapterModule module =new RecycleViewAdapterModule(urlCount, mContext,newsCollector);
-        ObjectGraph graph = ObjectGraph.create(module);
-        testedAdapter = graph.get(NewsRecycleViewAdapter.class);
-        int timeout = 1000;
-        testedAdapter.refreshNews();
-
-        module.getNewsRefreshedLatch().await(timeout, TimeUnit.MILLISECONDS);
-
+    protected RecycleViewAdapterModule initDIModule(){
+        RecycleViewAdapterModule module =new RecycleViewAdapterModule(mContext, new View(mContext));
+        return module;
     }
 
+    @SmallTest
+    @Override
+    public void testProgressViews(){
+        getInstrumentation().waitForIdleSync();
+        Assert.assertEquals(testedAdapter.progressView.getVisibility(),View.GONE);
+    }
 
     @SmallTest
     public void testItemsCount(){
@@ -41,13 +35,26 @@ public class NewsRecycleViewAdapterTest extends AndroidTestCase {
     }
 
     @SmallTest
-    public void testProgressViewsVisibility(){
-        Assert.assertTrue(testedAdapter.progressView.getVisibility()== View.GONE);
+    public void testViews(){
+        ViewGroup stub = new LinearLayout(mContext);
+        List<NewsInfo> newsInfoList = newsCollector.getAllNewsInfo();
+        for (int i = 0; i < testedAdapter.getItemCount(); i++) {
+            NewsRecycleViewAdapter.NewsInfoViewHolder holder = testedAdapter.createViewHolder(stub,0);
+            testedAdapter.bindViewHolder(holder,i);
+            NewsInfo itemInfo = newsInfoList.get(i);
+
+            TextView tvDescription = (TextView)holder.itemView.findViewById(R.id.tv_newsDescription);
+            Assert.assertEquals(itemInfo.getDescription(), tvDescription.getText().toString());
+            TextView tvTitle = (TextView)holder.itemView.findViewById(R.id.tv_newsTitle);
+            Assert.assertEquals(itemInfo.getTitle(), tvTitle.getText().toString());
+        }
     }
 
     @SmallTest
-    public void testViewsContent(){
-
+    public void testConstructor(){
+        View progressView = new View(mContext);
+        NewsRecycleViewAdapter adapter = new NewsRecycleViewAdapter(mContext, new ArrayList<String>(), progressView);
+        Assert.assertEquals(View.VISIBLE, progressView.getVisibility());
+        Assert.assertEquals(0, adapter.getItemCount());
     }
-
 }

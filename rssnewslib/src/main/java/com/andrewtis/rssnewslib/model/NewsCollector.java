@@ -1,5 +1,7 @@
 package com.andrewtis.rssnewslib.model;
 
+import android.support.annotation.VisibleForTesting;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -114,6 +116,7 @@ public class NewsCollector {
         return new NewsExtractor(newsUrl);
     }
 
+    @VisibleForTesting
     void refreshNews(String newsUrl) {
         boolean callbackExists = newsRefreshedCallback != null;
         if(callbackExists)
