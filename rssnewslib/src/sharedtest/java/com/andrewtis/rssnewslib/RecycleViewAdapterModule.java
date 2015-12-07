@@ -5,51 +5,48 @@ import android.view.View;
 
 import com.andrewtis.rssnewslib.model.NewsCollector;
 
-import java.util.concurrent.CountDownLatch;
-
 import dagger.Module;
 import dagger.Provides;
 
 @Module(injects = NewsRecycleViewAdapter.class)
-public class RecycleViewAdapterModule{
-
-    private Context mContext;
-    private NewsCollectorStub collector = new NewsCollectorStub(null, urlCount,newsInUrlCount, timeout/(newsInUrlCount+2));;
-    private View progressView;
-
+public class RecycleViewAdapterModule {
     protected final static int urlCount = 3;
     protected final static int newsInUrlCount = 10;
-    protected final static int  timeout = 1000;
+    protected final static int timeout = 1000;
 
+    private Context mContext;
+    private NewsCollectorStub collector = new NewsCollectorStub(null, urlCount, newsInUrlCount, timeout / (newsInUrlCount + 2));
+    ;
+    private View progressView;
 
-    public RecycleViewAdapterModule(Context mContext, NewsCollectorStub collector, View progressView){
+    public RecycleViewAdapterModule(Context mContext, NewsCollectorStub collector, View progressView) {
         this.mContext = mContext;
         this.progressView = progressView;
         this.collector = collector;
     }
 
-    public RecycleViewAdapterModule(Context mContext,  View progressView){
+    public RecycleViewAdapterModule(Context mContext, View progressView) {
         this.mContext = mContext;
         this.progressView = progressView;
 
     }
 
     @Provides
-    Context getContext(){
+    Context getContext() {
         return mContext;
     }
 
     @Provides
-    NewsCollector getCollector(){
+    NewsCollector getCollector() {
         return collector;
     }
 
     @Provides
-    View getProgressView(){
+    View getProgressView() {
         return progressView;
     }
 
-    public NewsCollectorStub getNewsCollectorStub(){
+    public NewsCollectorStub getNewsCollectorStub() {
         return collector;
     }
 

@@ -58,12 +58,15 @@ public class RssNewsFragment extends Fragment {
 
         View fragmentView = inflater.inflate(R.layout.fragment_rss_news, container, false);
         RecyclerView rvNews = (RecyclerView) fragmentView.findViewById(R.id.rv_News);
+
+       // rvNews.setHasFixedSize(true);
         ProgressBar pbNewsRefresh = (ProgressBar) fragmentView.findViewById(R.id.pb_NewsRefresh);
         NewsRecycleViewAdapter adapter = getRecycleViewAdapter(checkedRssUrls,pbNewsRefresh);
 
         rvNews.setLayoutManager(new LinearLayoutManager(getActivity()));
         rvNews.setAdapter(adapter);
         adapter.refreshNews();
+
         return fragmentView;
     }
 
@@ -80,5 +83,4 @@ public class RssNewsFragment extends Fragment {
         }
         super.onViewStateRestored(savedInstanceState);
     }
-
 }

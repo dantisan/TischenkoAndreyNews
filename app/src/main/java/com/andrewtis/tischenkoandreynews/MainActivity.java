@@ -13,6 +13,8 @@ import java.util.ArrayList;
 public class MainActivity extends Activity {
 
     private static String rssFragmentTag = "rssURL";
+    private Fragment rssFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,11 +24,21 @@ public class MainActivity extends Activity {
         refreshedUrls.add("http://lenta.ru/rss");
         refreshedUrls.add("http://www.gazeta.ru/export/rss/lenta.xml");
 
-        Fragment myFragment = RssNewsFragment.newInstance(refreshedUrls);
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        rssFragment = getFragmentManager().findFragmentByTag(rssFragmentTag);
+        if(rssFragment ==null) {
+            rssFragment = RssNewsFragment.newInstance(refreshedUrls);
 
-        fragmentTransaction.add(android.R.id.content, myFragment,rssFragmentTag);
-        fragmentTransaction.commit();
-        getFragmentManager().executePendingTransactions();
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.add(android.R.id.content, rssFragment, rssFragmentTag);
+            fragmentTransaction.commit();
+            getFragmentManager().executePendingTransactions();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //rssFragment.getView().postInvalidate();
+
     }
 }

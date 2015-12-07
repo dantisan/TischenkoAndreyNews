@@ -36,8 +36,19 @@ public class NewsRecycleViewAdapterTest extends NewsRecViewAdapterProgressViewTe
 
     @SmallTest
     public void testViews(){
-        ViewGroup stub = new LinearLayout(mContext);
-        List<NewsInfo> newsInfoList = newsCollector.getAllNewsInfo();
+        final ViewGroup stub = new LinearLayout(mContext);
+        final List<NewsInfo> newsInfoList = newsCollector.getAllNewsInfo();
+        getInstrumentation().runOnMainSync(new Runnable() {
+            @Override
+            public void run() {
+                checkViewsContent(stub, newsInfoList);
+            }
+        });
+        getInstrumentation().waitForIdleSync();
+
+    }
+
+    private void checkViewsContent(ViewGroup stub, List<NewsInfo> newsInfoList) {
         for (int i = 0; i < testedAdapter.getItemCount(); i++) {
             NewsRecycleViewAdapter.NewsInfoViewHolder holder = testedAdapter.createViewHolder(stub,0);
             testedAdapter.bindViewHolder(holder,i);
