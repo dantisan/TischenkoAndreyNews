@@ -170,14 +170,11 @@ public class NewsInfo implements Comparable<NewsInfo> {
         return node.getTextContent();
     }
 
-
     public static class NewsInfoXmlException extends Exception {
         public NewsInfoXmlException(String detailMessage) {
             super(detailMessage);
         }
     }
-
-
 
     public
     static DateTimeFormatter getRfc1123DateTimeFormatter() {

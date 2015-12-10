@@ -42,7 +42,7 @@ public class StubNewsExtractor extends NewsExtractor {
     public List<NewsInfo> getNews() throws IOException, SAXException, ParserConfigurationException {
         if (delay > 0)
             try {
-                Thread.sleep(delay);
+                Thread.sleep(200);//delay);
             } catch (InterruptedException e) {
                 System.err.println("Interrupted sleep in emulated getNews");
                 e.printStackTrace();

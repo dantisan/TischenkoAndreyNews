@@ -67,6 +67,4 @@ public class NewsExtractor {
         return response.body().string();
 
     }
-
-
 }

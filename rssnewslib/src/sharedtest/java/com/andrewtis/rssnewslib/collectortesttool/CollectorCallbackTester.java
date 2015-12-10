@@ -1,8 +1,11 @@
 package com.andrewtis.rssnewslib.collectortesttool;
 
 import com.andrewtis.rssnewslib.model.NewsCollector;
+import com.andrewtis.rssnewslib.model.NewsInfo;
 
 import junit.framework.Assert;
+
+import java.util.List;
 
 public class CollectorCallbackTester implements NewsCollector.NewsRefreshedCallback {
 
@@ -28,7 +31,7 @@ public class CollectorCallbackTester implements NewsCollector.NewsRefreshedCallb
     }
 
     @Override
-    public void newRefreshedForUrl(String url) {
+    public void newRefreshedForUrl(String url, List<NewsInfo> infos) {
         realRefreshedForUrlCount++;
     }
 

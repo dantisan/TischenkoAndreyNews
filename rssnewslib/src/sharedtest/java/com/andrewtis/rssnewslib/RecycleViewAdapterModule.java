@@ -3,6 +3,7 @@ package com.andrewtis.rssnewslib;
 import android.content.Context;
 import android.view.View;
 
+import com.andrewtis.rssnewslib.model.NewsCasher;
 import com.andrewtis.rssnewslib.model.NewsCollector;
 
 import dagger.Module;
@@ -15,8 +16,7 @@ public class RecycleViewAdapterModule {
     protected final static int timeout = 1000;
 
     private Context mContext;
-    private NewsCollectorStub collector = new NewsCollectorStub(null, urlCount, newsInUrlCount, timeout / (newsInUrlCount + 2));
-    ;
+    private NewsCollectorStub collector = new NewsCollectorStub( urlCount, newsInUrlCount, timeout / (newsInUrlCount + 2));
     private View progressView;
 
     public RecycleViewAdapterModule(Context mContext, NewsCollectorStub collector, View progressView) {
@@ -37,7 +37,7 @@ public class RecycleViewAdapterModule {
     }
 
     @Provides
-    NewsCollector getCollector() {
+    NewsCasher getCollector() {
         return collector;
     }
 

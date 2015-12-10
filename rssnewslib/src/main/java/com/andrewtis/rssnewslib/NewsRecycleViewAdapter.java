@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.andrewtis.rssnewslib.model.NewsCasher;
 import com.andrewtis.rssnewslib.model.NewsCollector;
 import com.andrewtis.rssnewslib.model.NewsInfo;
 import com.squareup.picasso.Picasso;
@@ -23,7 +24,7 @@ import javax.inject.Inject;
 
 public class NewsRecycleViewAdapter extends RecyclerView.Adapter<NewsRecycleViewAdapter.NewsInfoViewHolder> {
 
-    NewsCollector newsCollector = null;
+    NewsCasher newsCasher = null;
     private Context context;
     View progressView;
     Map<NewsInfo, Boolean> expandedNews = new HashMap<>();
@@ -31,15 +32,15 @@ public class NewsRecycleViewAdapter extends RecyclerView.Adapter<NewsRecycleView
     public NewsRecycleViewAdapter(Context context, List<String> newsRssUrlList, View progressView) {
         this.context = context;
         this.progressView = progressView;
-        newsCollector = new NewsCollector(new onNewsRefreshedCallbacks(context), newsRssUrlList);
+        newsCasher = new NewsCasher(new onNewsRefreshedCallbacks(context), newsRssUrlList);
     }
 
     @Inject
-    NewsRecycleViewAdapter(Context context, NewsCollector collector, View progressView) {
+    NewsRecycleViewAdapter(Context context, NewsCasher collector, View progressView) {
         this.context = context;
         this.progressView = progressView;
-        this.newsCollector = collector;
-        collector.setNewsRefreshedCallback(new onNewsRefreshedCallbacks(context));
+        this.newsCasher = collector;
+        collector.addNewsRefreshedCallback(new onNewsRefreshedCallbacks(context));
     }
 
     @Override
@@ -50,17 +51,17 @@ public class NewsRecycleViewAdapter extends RecyclerView.Adapter<NewsRecycleView
 
     @Override
     public void onBindViewHolder(NewsInfoViewHolder holder, int position) {
-        NewsInfo info = newsCollector.getAllNewsInfo().get(position);
+        NewsInfo info = newsCasher.getAllNewsInfo().get(position);
         holder.setDescriptionInfo(info, position);
     }
 
     @Override
     public int getItemCount() {
-        return newsCollector.getAllNewsInfo().size();
+        return newsCasher.getAllNewsInfo().size();
     }
 
     public void refreshNews() {
-        newsCollector.refreshCachedNews();
+        newsCasher.refreshCachedNews();
     }
 
     class NewsInfoViewHolder extends RecyclerView.ViewHolder {
@@ -140,7 +141,7 @@ public class NewsRecycleViewAdapter extends RecyclerView.Adapter<NewsRecycleView
         }
 
         @Override
-        public void newRefreshedForUrl(String url) {
+        public void newRefreshedForUrl(String url, List<NewsInfo> info) {
             mainHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -148,7 +149,6 @@ public class NewsRecycleViewAdapter extends RecyclerView.Adapter<NewsRecycleView
                     notifyDataSetChanged();
                 }
             });
-
         }
 
         @Override

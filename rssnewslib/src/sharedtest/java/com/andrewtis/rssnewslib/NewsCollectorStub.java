@@ -1,18 +1,26 @@
 package com.andrewtis.rssnewslib;
 
 import com.andrewtis.rssnewslib.collectortesttool.StubNewsExtractor;
+import com.andrewtis.rssnewslib.model.NewsCasher;
 import com.andrewtis.rssnewslib.model.NewsCollector;
 import com.andrewtis.rssnewslib.model.NewsExtractor;
+import com.andrewtis.rssnewslib.model.NewsInfo;
 
 import org.joda.time.DateTime;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-public class NewsCollectorStub extends NewsCollector {
+public class NewsCollectorStub extends NewsCasher {
+    private int stubUrlsCount;
 
-    HashMap<String, NewsExtractor> urlExtractors = new HashMap<>();
+    public HashMap<String, StubNewsExtractor> getUrlExtractors() {
+        return urlExtractors;
+    }
+
+    HashMap<String, StubNewsExtractor> urlExtractors = new HashMap<>();
 
     public TesterRefreshCallbacks getTestingCallback() {
         return testingCallback;
@@ -20,17 +28,13 @@ public class NewsCollectorStub extends NewsCollector {
 
     TesterRefreshCallbacks testingCallback;
 
-    @Override
-    public void setNewsRefreshedCallback(NewsRefreshedCallback newsRefreshedCallback) {
-        testingCallback.setAdditionCallback(newsRefreshedCallback);
-    }
-
     private int timesAwaitMillis ;
 
-    public NewsCollectorStub(NewsRefreshedCallback newsRefreshedCallback, int stubUrlsCount, int newsInUrlCount, int timesAwaitMillis) {
-        super(null);
-        testingCallback = new TesterRefreshCallbacks(stubUrlsCount+1,newsRefreshedCallback);
-        super.setNewsRefreshedCallback(testingCallback);
+    public NewsCollectorStub( int stubUrlsCount, int newsInUrlCount, int timesAwaitMillis) {
+        super();
+        this.stubUrlsCount = stubUrlsCount;
+        testingCallback = new TesterRefreshCallbacks();
+        super.addNewsRefreshedCallback(testingCallback);
 
         this.timesAwaitMillis = timesAwaitMillis;
         for (int i = 0; i < stubUrlsCount; i++) {
@@ -49,6 +53,9 @@ public class NewsCollectorStub extends NewsCollector {
         return urlExtractors.get(newsUrl);
     }
 
+    public void reinitLatch() {
+        countDownLatch = new CountDownLatch(stubUrlsCount+1);
+    }
     CountDownLatch countDownLatch;
 
     public void waitAllNewsRefreshed() throws InterruptedException {
@@ -57,33 +64,24 @@ public class NewsCollectorStub extends NewsCollector {
 
 
     class TesterRefreshCallbacks implements NewsCollector.NewsRefreshedCallback{
-        NewsCollector.NewsRefreshedCallback additionCallback;
 
-        public void setAdditionCallback(NewsRefreshedCallback additionCallback) {
-            this.additionCallback = additionCallback;
+        public TesterRefreshCallbacks(){
+            reinitLatch();
         }
 
-        public TesterRefreshCallbacks(int newsShouldRefreshed ,NewsCollector.NewsRefreshedCallback additionCallback){
-            countDownLatch = new CountDownLatch(newsShouldRefreshed);
-            this.additionCallback = additionCallback;
-        }
+
+
         @Override
         public void beforeNewStartRefreshing(String url) {
-            if(additionCallback!=null)
-                additionCallback.beforeNewStartRefreshing(url);
         }
 
         @Override
-        public void newRefreshedForUrl(String url) {
-            if(additionCallback!=null)
-                additionCallback.newRefreshedForUrl(url);
+        public void newRefreshedForUrl(String url, List<NewsInfo> infoList) {
             countDownLatch.countDown();
         }
 
         @Override
         public void errorOnRefreshing(Exception ex, String refreshingUrl) {
-            if(additionCallback!=null)
-                additionCallback.errorOnRefreshing(ex, refreshingUrl);
             countDownLatch.countDown();
         }
     }

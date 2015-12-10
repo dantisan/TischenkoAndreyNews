@@ -3,6 +3,7 @@ package com.andrewtis.rssnewslib;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -59,9 +60,8 @@ public class RssNewsFragment extends Fragment {
         View fragmentView = inflater.inflate(R.layout.fragment_rss_news, container, false);
         RecyclerView rvNews = (RecyclerView) fragmentView.findViewById(R.id.rv_News);
 
-       // rvNews.setHasFixedSize(true);
         ProgressBar pbNewsRefresh = (ProgressBar) fragmentView.findViewById(R.id.pb_NewsRefresh);
-        NewsRecycleViewAdapter adapter = getRecycleViewAdapter(checkedRssUrls,pbNewsRefresh);
+        final NewsRecycleViewAdapter adapter = getRecycleViewAdapter(checkedRssUrls,pbNewsRefresh);
 
         rvNews.setLayoutManager(new LinearLayoutManager(getActivity()));
         rvNews.setAdapter(adapter);
