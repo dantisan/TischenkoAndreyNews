@@ -42,14 +42,20 @@ public class StubNewsExtractor extends NewsExtractor {
     public List<NewsInfo> getNews() throws IOException, SAXException, ParserConfigurationException {
         if (delay > 0)
             try {
-                Thread.sleep(200);//delay);
+                Thread.sleep(delay);//delay
             } catch (InterruptedException e) {
                 System.err.println("Interrupted sleep in emulated getNews");
                 e.printStackTrace();
             }
 
         if (shouldFailNews) throw new IOException("Test fail news exception");
-        return newsList;
+
+        //We should generate and return cloned news, but not objects of newsList
+        ArrayList<NewsInfo> res = new ArrayList<>();
+        for (NewsInfo cunNew : newsList) {
+            res.add(new NewsInfo(cunNew));
+        }
+        return res;
     }
 
     public List<NewsInfo> getNewsList() {

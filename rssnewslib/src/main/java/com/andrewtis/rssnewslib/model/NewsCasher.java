@@ -5,12 +5,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class NewsCasher extends NewsCollector {
 
     private Map<String, List<NewsInfo>> newsCollection = new ConcurrentHashMap<>();
-    private List<NewsInfo> sortedNews = Collections.synchronizedList(new ArrayList<NewsInfo>());
+    private SortedSet<NewsInfo> sortedNews = Collections.synchronizedSortedSet(new TreeSet<NewsInfo>());
     private NewsCashedOnCallback refreshingCallback = new NewsCashedOnCallback();
 
     protected NewsCasher(){
@@ -45,12 +47,7 @@ public class NewsCasher extends NewsCollector {
     }
 
     private void addUrlNews(List<NewsInfo> news){
-        for (NewsInfo cur : news) {
-            if(sortedNews!=cur)
-                sortedNews.add(cur);
-        }
-        //sortedNews.addAll(news);
-        Collections.sort(sortedNews);
+        sortedNews.addAll(news);
     }
 
     public List<NewsInfo> getAllNewsInfo(){

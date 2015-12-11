@@ -2,7 +2,6 @@ package com.andrewtis.rssnewslib;
 
 import android.content.Context;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -86,9 +85,12 @@ public class NewsRecycleViewAdapter extends RecyclerView.Adapter<NewsRecycleView
 
             String imgUrl = info.getImgUrl();
             if (!imgUrl.isEmpty())
-                Picasso.with(ivPicture.getContext())
+                Picasso.with(context)
                         .load(imgUrl)
                         .into(ivPicture);
+            else Picasso.with(context)
+                    .load(R.drawable.no_image_available)
+                    .into(ivPicture);
 
             expandNewInit(info, position);
         }

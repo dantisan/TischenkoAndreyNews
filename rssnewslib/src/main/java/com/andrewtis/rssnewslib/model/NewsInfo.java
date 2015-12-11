@@ -35,12 +35,16 @@ public class NewsInfo implements Comparable<NewsInfo> {
 
     private long dateMillis = 0;
 
-    public boolean equals(NewsInfo cmpNews) {
-        if(cmpNews==null)
+    @Override
+    public boolean equals(Object obj) {
+        if(!(obj instanceof NewsInfo))
             return false;
-        if(cmpNews==this)
+        if(obj==null)
+            return false;
+        if(obj==this)
             return true;
 
+        NewsInfo cmpNews = (NewsInfo) obj;
         boolean eq = cmpNews.title.equals(title);
         eq &= cmpNews.description.equals(description);
         eq &= cmpNews.imgUrl.equals(imgUrl);
@@ -58,6 +62,10 @@ public class NewsInfo implements Comparable<NewsInfo> {
 
         DateTime date = getNewsDate();
         dateMillis = date == null ? 0 : date.getMillis();
+    }
+
+    public NewsInfo(NewsInfo src){
+        this(src.title, src.description,src.imgUrl, src.newsDate);
     }
 
     private String noNullString(String str) {
@@ -98,14 +106,27 @@ public class NewsInfo implements Comparable<NewsInfo> {
 
     @Override
     public int compareTo(@NonNull NewsInfo another) {
-        long dif = this.dateMillis - another.dateMillis;
 
+        if(this.equals(another))
+            return 0;
+
+        long dif = this.dateMillis - another.dateMillis;
         if (dif > 0) {
-            return 1;
-        } else if (dif < 0) {
             return -1;
+        } else if (dif < 0) {
+            return 1;
         }
-        return 0;
+        return -1* compareNewsByStr(another);
+    }
+
+    private int compareNewsByStr(@NonNull NewsInfo another){
+        int additionRes = getTitle().compareTo(another.getTitle());
+        if(additionRes==0)
+            additionRes = getDescription().compareTo(another.getDescription());
+        if(additionRes==0)
+            additionRes = getImgUrl().compareTo(another.getImgUrl());
+        return additionRes;
+
     }
 
     /**
